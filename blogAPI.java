@@ -38,7 +38,6 @@ public class blogAPI extends restapiclient{
 		try {
 			return doPOST(_data, _Ddata, _cookie);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			APIAnswer err = new APIAnswer("").error();
 			return err;

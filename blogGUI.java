@@ -10,8 +10,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.Font;
 
-//import com.google.gson.JsonElement;
-
 public class blogGUI {
 	JMenuBar menuBar;
 	JMenu menu;

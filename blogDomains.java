@@ -1,7 +1,3 @@
-//import java.util.ArrayList;
-
-//import com.google.gson.*;
-
 public class blogDomains {
 	private String[] domains;
 	private String currentDomain;

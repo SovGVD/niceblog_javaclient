@@ -1,11 +1,3 @@
-/*import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.Calendar;
-import java.util.Date;*/
-
-
 public class blogclient {
 	public static final blogAPI bAPI = new blogAPI();
 	public static final user bUser = new user();
