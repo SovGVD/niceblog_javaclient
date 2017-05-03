@@ -22,7 +22,7 @@ public class restapiclient {
 	private String APIURL = "https://nz.sovgvd.info/admin_api.php";
 	private final boolean APIDEBUG = true;
 
-	public APIAnswer doPOST(String[] _data, String[] _Ddata, String _cookie) throws Exception {
+	public APIAnswer doPOST(String[] _data, String[] _Ddata, String[] _Adata, String _cookie) throws Exception {
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpPost post = new HttpPost(APIURL);
 		
@@ -30,9 +30,15 @@ public class restapiclient {
 
 		int size = _data.length;
 		int Dsize = _Ddata.length;
-		if (Dsize>0) {
+		if (Dsize>0) { 
 	        for (int i=0; i<Dsize; i=i+2) {
 	        	urlParameters.add(new BasicNameValuePair("d[".concat(_Ddata[i]).concat("]"),_Ddata[i+1]));
+	        }
+		}
+		int Asize = _Adata.length;
+		if (Asize>0) {
+	        for (int i=0; i<Asize; i=i+2) {
+	        	urlParameters.add(new BasicNameValuePair("a[".concat(_Adata[i]).concat("]"),_Adata[i+1]));
 	        }
 		}
         for (int i=0; i<size; i=i+2) {
@@ -49,11 +55,11 @@ public class restapiclient {
 			post.setHeader("Cookie", "sid=".concat(_cookie));
 		}
 		 
-		post.setEntity(new UrlEncodedFormEntity(urlParameters));
+		post.setEntity(new UrlEncodedFormEntity(urlParameters, "UTF-8"));
 		
 		HttpResponse response = client.execute(post);
 		if (APIDEBUG) {
-			System.out.println("\nSending 'POST' request to URL : " + APIURL);
+			System.out.println("\n\n\nSending 'POST' request to URL : " + APIURL);
 			System.out.println("Post parameters : " + post.getEntity());
 			System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 		}

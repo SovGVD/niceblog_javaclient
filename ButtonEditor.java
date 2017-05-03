@@ -42,6 +42,7 @@ class ButtonEditor extends DefaultCellEditor {
 	    label = (value == null) ? "" : value.toString();
 	    button.setText(label);
 	    isPushed = true;
+	    // request article
 	    blogclient.bArticles.setCurrent(blogclient.bArticles.postIdByRow(row));
 	    blogclient.bArticles.article(blogclient.bAPI.API_article(blogclient.bDomains.current(), blogclient.bArticles.current()));
 	    return button;

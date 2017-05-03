@@ -6,9 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+//import javax.swing.event.ListSelectionEvent;
+//import javax.swing.event.ListSelectionListener;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 public class blogGUI {
 	JMenuBar menuBar;
@@ -18,9 +21,11 @@ public class blogGUI {
 	JPasswordField lpass; 
 	JTable ArticlesList = new JTable();
 	JScrollPane ArticlesPane;
-	JTextField textField;
-	JTextArea textArea;
-	JButton bsave;
+	JTextField postTitle, postUrl;
+	JTextArea postText;
+	JButton bsave, bdelete;
+	JButton badd;
+	JPanel bPanel,titlePanel;
 	public JMenu menuItemsBlogs;
 	
 	public blogGUI () {
@@ -36,6 +41,7 @@ public class blogGUI {
 	}
 	
 	public void hideArticlesList() {
+		try { mframe.remove(badd);} catch (NullPointerException e) {}
 		try { mframe.remove(ArticlesPane);} catch (NullPointerException e) {}
 	}
 	
@@ -48,37 +54,95 @@ public class blogGUI {
 			ArticlesList.getColumn("Edit").setCellEditor(new ButtonEditor(new JCheckBox()));
 		ArticlesPane = new JScrollPane(ArticlesList);
 		ArticlesList.setFillsViewportHeight(true);
-		mframe.add(ArticlesPane);
+		badd = new JButton("Add new");
+		badd.addActionListener( new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	blogclient.bArticles.newArticle();
+		    }
+		});
+		mframe.add(ArticlesPane, BorderLayout.CENTER);
+		mframe.add(badd, BorderLayout.SOUTH);
 		mframe.revalidate();
 	}
 	public void hideArticle() {
-		try { mframe.remove(textField);} catch (NullPointerException e) {}
-		try { mframe.remove(textArea);} catch (NullPointerException e) {}
-		try { mframe.remove(bsave);} catch (NullPointerException e) {}
+		//try { mframe.remove(postTitle);} catch (NullPointerException e) {}
+		try { mframe.remove(postText);} catch (NullPointerException e) {}
+		//try { mframe.remove(bsave);} catch (NullPointerException e) {}
+		//try { mframe.remove(bdelete);} catch (NullPointerException e) {}
+		try { mframe.remove(bPanel);} catch (NullPointerException e) {}
+		try { mframe.remove(titlePanel);} catch (NullPointerException e) {}
 		try { mframe.remove(ArticlesPane);} catch (NullPointerException e) {}
 	}
 	public void showArticle(String title, String text_src) {
 		hideArticlesList();
 		hideArticle();
-		textField = new JTextField(20);
-		textArea = new JTextArea(5, 20);
+		postTitle = new JTextField();
+		postUrl = new JTextField();
+		postText = new JTextArea(5, 20);
         //textArea.setEditable(false);
-		textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setFont(new Font("monospaced", Font.PLAIN, 12));
-        textArea.setText(text_src);
-        textField.setText(title);
-		ArticlesPane = new JScrollPane(textArea);
+		postText.setLineWrap(true);
+        postText.setWrapStyleWord(true);
+        postText.setFont(new Font("monospaced", Font.PLAIN, 12));
+        postText.setText(text_src);
+        postTitle.setText(title);
+		ArticlesPane = new JScrollPane(postText);
 		bsave = new JButton("Save");
 		bsave.addActionListener( new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	//doLogin(luser.getText(), String.valueOf(lpass.getPassword()));
+		    	blogclient.bArticles.saveArticle(postTitle.getText(), postText.getText());
+		    }
+		});
+		bdelete = new JButton("Delete");
+		bdelete.addActionListener( new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	//blogclient.bArticles.saveArticle(textField.getText(), textArea.getText());
 		    }
 		});
 		
+		titlePanel = new JPanel();
+		titlePanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+			JLabel tmp_title_label = new JLabel("Title");
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 0;
+			c.gridy = 0;
+			c.weightx = 0.5;
+			c.insets = new Insets(0,10,0,0); 
+			titlePanel.add(tmp_title_label,c);
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 1;
+			c.gridy = 0;
+			c.weightx = 0.5;
+			c.gridwidth = 3;
+			c.insets = new Insets(0,0,0,10);
+			titlePanel.add(postTitle,c);
+		
+			JLabel tmp_url_label = new JLabel("URL");
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 0;
+			c.gridy = 1;
+			c.weightx = 0.5;
+			c.insets = new Insets(0,10,0,0);
+			titlePanel.add(tmp_url_label,c);
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridx = 1;
+			c.gridy = 1;
+			c.weightx = 0.5;
+			c.gridwidth = 5;
+			c.insets = new Insets(0,0,0,10);
+			titlePanel.add(postUrl,c);
+
+		//titlePanel.add(tmp_title);
+		//titlePanel.add(tmp_url);
+		
+		bPanel = new JPanel();
+		bPanel.add(bsave);
+		bPanel.add(bdelete);
+		
+		
 		mframe.add(ArticlesPane, BorderLayout.CENTER);
-		mframe.add(textField, BorderLayout.NORTH);
-		mframe.add(bsave, BorderLayout.SOUTH);
+		mframe.add(titlePanel, BorderLayout.NORTH);
+		mframe.add(bPanel, BorderLayout.SOUTH);
 		mframe.revalidate();
 	}
 	
@@ -134,18 +198,64 @@ public class blogGUI {
 		lframe.setBounds(100,100, 200,120);
 		
 		JPanel lpanel = new JPanel();
+		lpanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		
 		JButton blogin = new JButton("Login");
 		blogin.addActionListener( new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	doLogin(luser.getText(), String.valueOf(lpass.getPassword()));
 		    }
 		});
-		luser = new JTextField(15);
-		lpass = new JPasswordField(15);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 0.5;
+		c.insets = new Insets(0,10,0,0);  //top padding
+		JLabel login_label = new JLabel("Login");
+		lpanel.add(login_label, c);
 		
-		lpanel.add(luser);
-		lpanel.add(lpass);
-		lpanel.add(blogin);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = 0.5;
+		c.gridwidth = 2;
+		c.insets = new Insets(0,0,0,10);  //top padding
+		luser = new JTextField();
+		lpanel.add(luser, c);
+
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.weightx = 0.5;
+		c.insets = new Insets(0,10,0,0);  //top padding
+		JLabel password_label = new JLabel("Password");
+		lpanel.add(password_label, c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 1;
+		c.weightx = 0.5;
+		c.gridwidth = 2;
+		c.insets = new Insets(0,0,0,10);  //top padding
+		lpass = new JPasswordField();
+		lpanel.add(lpass, c);
+
+		
+		//lpanel.add(luser);
+		//lpanel.add(lpass);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.ipady = 0;
+		c.weighty = 1.0;
+		c.anchor = GridBagConstraints.PAGE_END;
+		c.insets = new Insets(10,10,10,10);  //top padding
+		c.gridx = 1;
+		c.gridwidth = 1;
+		c.gridy = 2;
+		lpanel.add(blogin, c);
 		
 		lframe.getContentPane().add(lpanel);
 		
