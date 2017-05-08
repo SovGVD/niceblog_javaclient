@@ -27,7 +27,7 @@ public class blogGUI {
 	JTextArea postText;
 	JButton bsave, bdelete;
 	JButton badd;
-	JPanel bPanel,titlePanel;
+	JPanel bPanel,titlePanel,lPanel;
 	JCheckBox lrem;
 	public JMenu menuItemsBlogs;
 	
@@ -44,7 +44,7 @@ public class blogGUI {
 	}
 	
 	public void hideArticlesList() {
-		try { mframe.remove(badd);} catch (NullPointerException e) {}
+		try { mframe.remove(lPanel);} catch (NullPointerException e) {}
 		try { mframe.remove(ArticlesPane);} catch (NullPointerException e) {}
 	}
 	
@@ -64,43 +64,32 @@ public class blogGUI {
 		    }
 		});
 		mframe.add(ArticlesPane, BorderLayout.CENTER);
-		mframe.add(badd, BorderLayout.SOUTH);
+
+		lPanel = new JPanel();
+		lPanel.add(badd);
+
+		mframe.add(lPanel, BorderLayout.SOUTH);
 		mframe.revalidate();
 	}
 	public void hideArticle() {
-		//try { mframe.remove(postTitle);} catch (NullPointerException e) {}
 		try { mframe.remove(postText);} catch (NullPointerException e) {}
-		//try { mframe.remove(bsave);} catch (NullPointerException e) {}
-		//try { mframe.remove(bdelete);} catch (NullPointerException e) {}
 		try { mframe.remove(bPanel);} catch (NullPointerException e) {}
 		try { mframe.remove(titlePanel);} catch (NullPointerException e) {}
 		try { mframe.remove(ArticlesPane);} catch (NullPointerException e) {}
 	}
-	public void showArticle(String title, String text_src) {
+	public void showArticle(String title, String text_src, String url) {
 		hideArticlesList();
 		hideArticle();
 		postTitle = new JTextField();
 		postUrl = new JTextField();
 		postText = new JTextArea(5, 20);
-        //textArea.setEditable(false);
 		postText.setLineWrap(true);
         postText.setWrapStyleWord(true);
         postText.setFont(new Font("monospaced", Font.PLAIN, 12));
         postText.setText(text_src);
         postTitle.setText(title);
+        postUrl.setText(url);
 		ArticlesPane = new JScrollPane(postText);
-		bsave = new JButton("Save");
-		bsave.addActionListener( new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	blogclient.bArticles.saveArticle(postTitle.getText(), postText.getText());
-		    }
-		});
-		bdelete = new JButton("Delete");
-		bdelete.addActionListener( new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	//blogclient.bArticles.saveArticle(textField.getText(), textArea.getText());
-		    }
-		});
 		
 		titlePanel = new JPanel();
 		titlePanel.setLayout(new GridBagLayout());
@@ -134,10 +123,20 @@ public class blogGUI {
 			c.gridwidth = 5;
 			c.insets = new Insets(0,0,0,10);
 			titlePanel.add(postUrl,c);
-
-		//titlePanel.add(tmp_title);
-		//titlePanel.add(tmp_url);
-		
+			
+		bsave = new JButton("Save");
+		bsave.addActionListener( new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	blogclient.bArticles.saveArticle(postTitle.getText(), postText.getText(), postUrl.getText());
+		    }
+		});
+		bdelete = new JButton("Delete");
+		bdelete.addActionListener( new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	blogclient.bArticles.deleteArticle();
+		    }
+		});
+			
 		bPanel = new JPanel();
 		bPanel.add(bsave);
 		bPanel.add(bdelete);

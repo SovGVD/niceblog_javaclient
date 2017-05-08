@@ -1,7 +1,5 @@
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import com.google.gson.*;
 
@@ -39,7 +37,7 @@ public class blogArticles {
 		privacy="0";
 		crosspost_it="0";
 		
-		blogclient.bGUI.showArticle(title, text_src);
+		blogclient.bGUI.showArticle(title, text_src, url);
 	}
 	
 	public void setCurrent(String id) {
@@ -77,16 +75,17 @@ public class blogArticles {
 
 		blogclient.bGUI.showArticle(
 				title,
-				text_src
+				text_src,
+				url
 				);
 	}
 	
-	public void saveArticle(String stitle, String stext_src) {
+	public void saveArticle(String stitle, String stext_src, String surl) {
 		String domain = blogclient.bDomains.current();
 		// TODO, update date?
 		dt = currentDt();
-		System.out.println("string".concat(stext_src));
-		blogclient.bAPI.API_article_save(domain, currentId, stitle, stext_src, dt, url, text_tags, post_lang, privacy, crosspost_it);
+		//System.out.println("string".concat(stext_src));
+		blogclient.bAPI.API_article_save(domain, currentId, stitle, stext_src, dt, surl, text_tags, post_lang, privacy, crosspost_it);
 		// move to articles list
 		this.list(blogclient.bAPI.API_articles(domain));
 	}
@@ -108,6 +107,13 @@ public class blogArticles {
 		}
 
 		blogclient.bGUI.showArticlesList(data, columNames);
+	}
+
+	public void deleteArticle() {
+		String domain = blogclient.bDomains.current();
+		blogclient.bAPI.API_article_delete(domain, currentId);
+		// move to articles list
+		this.list(blogclient.bAPI.API_articles(domain));
 	}
 	
 }

@@ -5,8 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.sqlite.SQLiteDataSource;
-import org.sqlite.SQLiteJDBCLoader;    
+//import org.sqlite.SQLiteDataSource;
+//import org.sqlite.SQLiteJDBCLoader;    
 
 public class blogDB {
 	private Connection conn = null;
@@ -15,7 +15,8 @@ public class blogDB {
 		this.connect();
 		this.init();
 	}
-	
+
+	// key-value in SQLite
 	public String get(String t, String k) {
 		try {
 			String sql = "SELECT v FROM "+t+" WHERE k=?";
@@ -39,6 +40,7 @@ public class blogDB {
 	}
 	
 	public boolean set (String t, String k, String v) {
+		// TODO set data even if there is no key in database
 		try {
 			String sql = "UPDATE "+t+" SET v=? WHERE k=?";
 			PreparedStatement stmt = conn.prepareStatement(sql);

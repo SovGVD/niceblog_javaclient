@@ -44,6 +44,14 @@ public class blogAPI extends restapiclient{
 		return API(_data, _Ddata, _Adata);
 	}
 
+	public APIAnswer API_article_delete(String domain, String postId) {
+		String[] _data = {"c","articles", "m", "delete","sid", sid, "request_id", "API_article_delete"};
+		String[] _Ddata = {"domain", domain, "post_id", postId};
+		String[] _Adata = {};
+		return API(_data, _Ddata, _Adata);
+	}
+
+	
 	private APIAnswer API (String[] _data, String[] _Ddata, String[] _Adata) {
 		String _cookie = "";
 		try {
@@ -54,5 +62,6 @@ public class blogAPI extends restapiclient{
 			return err;
 		}
 	}
+
 
 }
