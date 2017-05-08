@@ -25,7 +25,7 @@ public class blogGUI {
 	JScrollPane ArticlesPane;
 	JTextField postTitle, postUrl;
 	JTextArea postText;
-	JButton bsave, bdelete;
+	JButton bsave, bdelete, bpreview;
 	JButton badd;
 	JPanel bPanel,titlePanel,lPanel;
 	JCheckBox lrem;
@@ -133,19 +133,45 @@ public class blogGUI {
 		bdelete = new JButton("Delete");
 		bdelete.addActionListener( new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
+		    	// TODO confirmation
 		    	blogclient.bArticles.deleteArticle();
 		    }
 		});
-			
+
+		/*bpreview = new JButton("Preview");
+		bpreview.addActionListener( new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	//showHTMLpreview(postTitle.getText(), postText.getText());
+		    }
+		});*/
+
+		
 		bPanel = new JPanel();
 		bPanel.add(bsave);
 		bPanel.add(bdelete);
+		//bPanel.add(bpreview);
 		
 		
 		mframe.add(ArticlesPane, BorderLayout.CENTER);
 		mframe.add(titlePanel, BorderLayout.NORTH);
 		mframe.add(bPanel, BorderLayout.SOUTH);
 		mframe.revalidate();
+	}
+	
+	public void showHTMLpreview(String title, String html_text) {
+		JEditorPane jep = new JEditorPane();
+		jep.setEditable(false);   
+		  jep.setContentType("text/html");
+		  //jep.setText(blogclient.bArticles.articleHTMLpreview(html_text));
+
+		JScrollPane scrollPane = new JScrollPane(jep);     
+		JFrame f = new JFrame(title);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		f.setBounds(0,0, (int)(screenSize.width/2),(int)(screenSize.height/1.3));
+		f.getContentPane().add(scrollPane);
+		f.setPreferredSize(new Dimension(800,600));
+		centreWindow(f);
+		f.setVisible(true);
 	}
 	
 	public void reInitGUI() {
@@ -165,7 +191,6 @@ public class blogGUI {
 		mframe = new JFrame("Blog client");
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		mframe.setBounds(0,0, (int)(screenSize.width/1.5),(int)(screenSize.height/1.5));
-		//mframe.setBounds(0,0, 200, 200);
 		mframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 
@@ -285,7 +310,6 @@ public class blogGUI {
 		if (!blogclient.bUser.login(login, password)) {
 			showError("Unable to login");
 		} else {
-			// TODO is `save password` checked, if not - set empty strings to DB
 			if (store_password) {
 				blogclient.bDB.storeUserPassword(login,password);
 			} else {

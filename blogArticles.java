@@ -84,7 +84,6 @@ public class blogArticles {
 		String domain = blogclient.bDomains.current();
 		// TODO, update date?
 		dt = currentDt();
-		//System.out.println("string".concat(stext_src));
 		blogclient.bAPI.API_article_save(domain, currentId, stitle, stext_src, dt, surl, text_tags, post_lang, privacy, crosspost_it);
 		// move to articles list
 		this.list(blogclient.bAPI.API_articles(domain));
