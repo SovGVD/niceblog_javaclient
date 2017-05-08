@@ -2,6 +2,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class blogclient {
+	public static final blogCipher bCipher = new blogCipher();
+	public static final blogDB bDB = new blogDB();
 	public static final blogAPI bAPI = new blogAPI();
 	public static final user bUser = new user();
 	public static final blogGUI bGUI = new blogGUI();
@@ -20,4 +22,5 @@ public class blogclient {
 		bGUI.initGUI();
 		System.out.println("Done");
 	}
+	
 }

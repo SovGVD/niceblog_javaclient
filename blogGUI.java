@@ -3,7 +3,9 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 
 import javax.swing.*;
 //import javax.swing.event.ListSelectionEvent;
@@ -26,6 +28,7 @@ public class blogGUI {
 	JButton bsave, bdelete;
 	JButton badd;
 	JPanel bPanel,titlePanel;
+	JCheckBox lrem;
 	public JMenu menuItemsBlogs;
 	
 	public blogGUI () {
@@ -195,7 +198,7 @@ public class blogGUI {
 	}
 	private void initLoginPass() {
 		lframe = new JFrame("Login");
-		lframe.setBounds(100,100, 200,120);
+		lframe.setBounds(100,100, 250,150);
 		
 		JPanel lpanel = new JPanel();
 		lpanel.setLayout(new GridBagLayout());
@@ -204,7 +207,7 @@ public class blogGUI {
 		JButton blogin = new JButton("Login");
 		blogin.addActionListener( new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	doLogin(luser.getText(), String.valueOf(lpass.getPassword()));
+		    	doLogin(luser.getText(), String.valueOf(lpass.getPassword()), lrem.isSelected());
 		    }
 		});
 
@@ -223,6 +226,7 @@ public class blogGUI {
 		c.gridwidth = 2;
 		c.insets = new Insets(0,0,0,10);  //top padding
 		luser = new JTextField();
+			luser.setText(blogclient.bUser.getUserLogin());
 		lpanel.add(luser, c);
 
 		
@@ -230,7 +234,7 @@ public class blogGUI {
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = 0.5;
-		c.insets = new Insets(0,10,0,0);  //top padding
+		c.insets = new Insets(0,10,0,0);
 		JLabel password_label = new JLabel("Password");
 		lpanel.add(password_label, c);
 		
@@ -239,22 +243,37 @@ public class blogGUI {
 		c.gridy = 1;
 		c.weightx = 0.5;
 		c.gridwidth = 2;
-		c.insets = new Insets(0,0,0,10);  //top padding
+		c.insets = new Insets(0,0,0,10);
 		lpass = new JPasswordField();
+			lpass.setText(blogclient.bUser.getUserPassword());
 		lpanel.add(lpass, c);
-
 		
-		//lpanel.add(luser);
-		//lpanel.add(lpass);
+				
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 2;
+		c.weightx = 0.5;
+		c.gridwidth = 2;
+		c.insets = new Insets(0,0,0,0);
+		lrem = new JCheckBox("Remember me");
+		System.out.println(blogclient.bDB.get("user","remember").equals("1"));
+		lrem.setSelected(blogclient.bDB.get("user","remember").equals("1"));
+		lrem.addItemListener(new ItemListener() {
+	         public void itemStateChanged(ItemEvent e) {
+	               blogclient.bDB.set("user","remember",e.getStateChange()==1?"1":"0");
+	         }           
+	      });
+		lpanel.add(lrem, c);
+		
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.ipady = 0;
 		c.weighty = 1.0;
 		c.anchor = GridBagConstraints.PAGE_END;
-		c.insets = new Insets(10,10,10,10);  //top padding
+		c.insets = new Insets(10,10,10,10);
 		c.gridx = 1;
 		c.gridwidth = 1;
-		c.gridy = 2;
+		c.gridy = 3;
 		lpanel.add(blogin, c);
 		
 		lframe.getContentPane().add(lpanel);
@@ -263,10 +282,22 @@ public class blogGUI {
 		lframe.setVisible(true);
 	}	
 	
-	public void doLogin(String login, String password) {
+	public void doLogin(String login, String password, Boolean store_password) {
 		if (!blogclient.bUser.login(login, password)) {
 			showError("Unable to login");
+		} else {
+			// TODO is `save password` checked, if not - set empty strings to DB
+			if (store_password) {
+				blogclient.bDB.storeUserPassword(login,password);
+			} else {
+				blogclient.bDB.storeUserPassword("","");
+			}
+			luser.setText("");	// clear login field for security reason
+	    	lpass.setText("");	// clear password field
 		}
+		// clear raw login/password variables ASAP
+		login=null;
+		password=null;
 		reInitGUI();
 	}
 	public void showError (String t) {
@@ -280,6 +311,7 @@ public class blogGUI {
 	}
 	
 	public static void exitProgram (int code) {
+		blogclient.bDB.disconnect();
 		System.exit(code);
 	}
 }

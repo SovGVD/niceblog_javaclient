@@ -7,6 +7,15 @@ public class user {
 		
 	}
 	
+	public String getUserPassword () {
+		return blogclient.bCipher.decrypt(blogclient.bDB.get("user", "password"));
+	}
+
+	public String getUserLogin () {
+		return blogclient.bCipher.decrypt(blogclient.bDB.get("user", "login"));
+	}
+
+	
 	public boolean isUserLogedIn () {
 		return userLogin;
 	}
