@@ -64,7 +64,6 @@ public class blogAPI extends restapiclient{
 			return err;
 		} catch (Exception e) {
 			System.out.println("API error");
-			//e.printStackTrace();
 			APIAnswer err = new APIAnswer("").error();
 			return err;
 		}

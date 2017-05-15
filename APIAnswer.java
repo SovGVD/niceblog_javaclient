@@ -10,22 +10,33 @@ public class APIAnswer {
 	private boolean hasError;
 	
 	public APIAnswer(String j) {
-		set(j);
+		hasError=false;
+		if (j!="") set(j);
+	}
+	
+	public void setResult(String j) {
+		RAWanswer = j;
+		if (j!="") {
+			try {
+				JSONanswer = new JsonParser().parse(j).getAsJsonObject();
+				ready = true;
+				if (JSONanswer.get("r").getAsString().equals("ok")) {
+					hasError = false;
+				} else {
+					hasError = true;
+				}
+			} catch (NullPointerException e) {
+				hasError = true;
+			}
+		} else {
+			hasError = true;
+		}		
 	}
 	
 	public void set(String j) {
-		RAWanswer = j;
-		if (!hasError && j!="") {
-			JSONanswer = new JsonParser().parse(j).getAsJsonObject();
-			ready = true;
-			if (JSONanswer.get("r").getAsString().equals("ok")) {
-				hasError = true;
-			} else {
-				hasError = false;
-			}
-		} else {
+		setResult(j);
+		if (!isOK()) {
 			blogclient.bGUI.showError("API error, network or host unreachable.");
-			hasError = true;
 		}
 	}
 	
@@ -34,7 +45,7 @@ public class APIAnswer {
 	}
 	
 	public boolean isOK () {
-		return hasError;
+		return !hasError;
 	}
 	
 	public String value(String v) {

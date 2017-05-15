@@ -40,8 +40,14 @@ public class blogArticles {
 		blogclient.bGUI.showArticle(title, text_src, url);
 	}
 	
-	public void setCurrent(String id) {
-		currentId=id;
+	public boolean setCurrent(String id) {
+		if (Integer.parseInt(id)>0) {
+			currentId=id;
+			return true;
+		} else {
+			currentId="";
+			return false;
+		}
 	}
 	
 	public String current() {

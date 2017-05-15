@@ -20,17 +20,23 @@ public class user {
 		return userLogin;
 	}
 	
-	public boolean userSID (String sid) {
+	public boolean setUserSID (String sid) {
 		if (sid.equals("") || sid.equals("ERROR")) {
+			userLogin=false;
+			userCredentials="";
+		} else if (!sid.matches("[0-9a-zA-Z]+")) {
 			userLogin=false;
 			userCredentials="";
 		} else {
 			userLogin=true;
 			userCredentials=sid;
+		}
+		return userLogin;
+	}
+	public boolean userSID (String sid) {
+		if (setUserSID(sid)) {
 			blogclient.bAPI.setCredentials(sid);
 			blogclient.bDomains.set(blogclient.bAPI.API_domains());
-			
-			System.out.println("SID: ".concat(userCredentials));
 		}
 		return userLogin;
 	}

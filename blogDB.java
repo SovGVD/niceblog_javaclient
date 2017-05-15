@@ -4,9 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-//import org.sqlite.SQLiteDataSource;
-//import org.sqlite.SQLiteJDBCLoader;    
+import java.util.Arrays;
+import java.util.Set;
 
 public class blogDB {
 	private Connection conn = null;
@@ -15,9 +14,20 @@ public class blogDB {
 		this.connect();
 		this.init();
 	}
+	
+	// http://stackoverflow.com/questions/1128723/how-can-i-test-if-an-array-contains-a-certain-value
+	private static boolean in_array(String[] arr, String targetValue) {
+	    return Arrays.asList(arr).contains(targetValue);
+	}
+
+	private String[] allowed_tables = new String[] {"user"};
 
 	// key-value in SQLite
 	public String get(String t, String k) {
+		if (!in_array(allowed_tables,t)) {
+			//System.out.println("Wrong table");
+			return "";
+		}
 		try {
 			String sql = "SELECT v FROM "+t+" WHERE k=?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
@@ -28,7 +38,7 @@ public class blogDB {
             return r;
         } catch (SQLException e) {
         	e.printStackTrace();
-            System.out.println("GET ERROR ".concat(e.getMessage()));
+            //System.out.println("GET ERROR ".concat(e.getMessage()));
             return "";
         }
 	}

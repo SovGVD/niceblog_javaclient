@@ -133,8 +133,9 @@ public class blogGUI {
 		bdelete = new JButton("Delete");
 		bdelete.addActionListener( new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	// TODO confirmation
-		    	blogclient.bArticles.deleteArticle();
+		    	if (blogclient.bGUI.showConfirm("Do you realy want to delete it?")) {
+		    		blogclient.bArticles.deleteArticle();
+		    	} 
 		    }
 		});
 
@@ -326,6 +327,15 @@ public class blogGUI {
 	public void showError (String t) {
 		JOptionPane.showMessageDialog(null, t);
 	}
+	public boolean showConfirm (String t) {
+		int dialogResult = JOptionPane.showConfirmDialog (null, t, "Warning", JOptionPane.YES_NO_OPTION);
+		if (dialogResult == JOptionPane.YES_OPTION) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public static void centreWindow(Window frame) {
 	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 	    int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
