@@ -1,3 +1,5 @@
+import java.net.UnknownHostException;
+
 public class blogAPI extends restapiclient{
 	private String sid;
 		
@@ -56,7 +58,12 @@ public class blogAPI extends restapiclient{
 		String _cookie = "";
 		try {
 			return doPOST(_data, _Ddata, _Adata, _cookie);
+		} catch (UnknownHostException e) {
+			System.out.println("Network Error");
+			APIAnswer err = new APIAnswer("").error();
+			return err;
 		} catch (Exception e) {
+			System.out.println("API error");
 			//e.printStackTrace();
 			APIAnswer err = new APIAnswer("").error();
 			return err;

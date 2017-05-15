@@ -15,12 +15,17 @@ public class APIAnswer {
 	
 	public void set(String j) {
 		RAWanswer = j;
-		JSONanswer = new JsonParser().parse(j).getAsJsonObject();
-		ready = true;
-		if (JSONanswer.get("r").getAsString().equals("ok")) {
-			hasError = true;
+		if (!hasError && j!="") {
+			JSONanswer = new JsonParser().parse(j).getAsJsonObject();
+			ready = true;
+			if (JSONanswer.get("r").getAsString().equals("ok")) {
+				hasError = true;
+			} else {
+				hasError = false;
+			}
 		} else {
-			hasError = false;
+			blogclient.bGUI.showError("API error, network or host unreachable.");
+			hasError = true;
 		}
 	}
 	
@@ -52,7 +57,7 @@ public class APIAnswer {
 	}
 	
 	public APIAnswer error() {
-		hasError=true;
+		this.hasError=true;
 		return this;
 	}	
 }
