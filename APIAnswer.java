@@ -8,14 +8,17 @@ public class APIAnswer {
 	private JsonObject JSONanswer;
 	private boolean ready;
 	private boolean hasError;
+	private boolean networkError;
 	
 	public APIAnswer(String j) {
 		hasError=false;
+		networkError=false;
 		if (j!="") set(j);
 	}
 	
 	public void setResult(String j) {
 		RAWanswer = j;
+		//networkError = false;
 		if (j!="") {
 			try {
 				JSONanswer = new JsonParser().parse(j).getAsJsonObject();
@@ -26,6 +29,7 @@ public class APIAnswer {
 					hasError = true;
 				}
 			} catch (NullPointerException e) {
+				//networkError = true;	// Actually not working like that...
 				hasError = true;
 			}
 		} else {
@@ -35,8 +39,8 @@ public class APIAnswer {
 	
 	public void set(String j) {
 		setResult(j);
-		if (!isOK()) {
-			blogclient.bGUI.showError("API error, network or host unreachable.");
+		if (!isNetworkOK()) {
+			blogclient.bGUI.showError("Network or host unreachable.");
 		}
 	}
 	
@@ -47,7 +51,11 @@ public class APIAnswer {
 	public boolean isOK () {
 		return !hasError;
 	}
-	
+
+	public boolean isNetworkOK () {
+		return !networkError;
+	}
+
 	public String value(String v) {
 		return JSONanswer.getAsJsonObject("d").get(v).getAsString();
 	}
@@ -71,4 +79,14 @@ public class APIAnswer {
 		this.hasError=true;
 		return this;
 	}	
+	public APIAnswer errorAPI() {
+		this.hasError=true;
+		return this;
+	}	
+	public APIAnswer errorNetwork() {
+		this.networkError=true;
+		this.hasError=true;
+		return this;
+	}	
+
 }

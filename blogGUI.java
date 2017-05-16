@@ -325,7 +325,7 @@ public class blogGUI {
 		reInitGUI();
 	}
 	public void showError (String t) {
-		JOptionPane.showMessageDialog(null, t);
+		JOptionPane.showMessageDialog(null, t, "Warning", JOptionPane.WARNING_MESSAGE);
 	}
 	public boolean showConfirm (String t) {
 		int dialogResult = JOptionPane.showConfirmDialog (null, t, "Warning", JOptionPane.YES_NO_OPTION);
