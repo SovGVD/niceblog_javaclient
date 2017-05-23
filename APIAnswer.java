@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.*;
+import com.google.gson.stream.MalformedJsonException;
 
 public class APIAnswer {
 	private String RAWanswer;
@@ -15,7 +16,11 @@ public class APIAnswer {
 		networkError=false;
 		if (j!="") set(j);
 	}
-	
+	/**
+	 * method parse raw JSON string to APIAnswer object
+	 * 
+	 * @param is the JSON String and must be a valid JSON formated
+	 */
 	public void setResult(String j) {
 		RAWanswer = j;
 		//networkError = false;
@@ -28,6 +33,9 @@ public class APIAnswer {
 				} else {
 					hasError = true;
 				}
+			} catch (JsonSyntaxException e) {
+				// JSON syntax error
+				hasError = true;
 			} catch (NullPointerException e) {
 				//networkError = true;	// Actually not working like that...
 				hasError = true;

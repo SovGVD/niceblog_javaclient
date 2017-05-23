@@ -9,8 +9,8 @@ public class APIAnswerTest {
         apiAnswerclass.setResult("");
         boolean result = apiAnswerclass.isOK();
         assertEquals(false, result);
-
-        apiAnswerclass.setResult("{}");
+        
+        apiAnswerclass.setResult("{dkfjghsdjfghskdhg}");
         result = apiAnswerclass.isOK();
         assertEquals(false, result);
 
