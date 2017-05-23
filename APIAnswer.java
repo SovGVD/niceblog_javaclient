@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.*;
-import com.google.gson.stream.MalformedJsonException;
+//import com.google.gson.stream.MalformedJsonException;
 
 public class APIAnswer {
 	private String RAWanswer;
@@ -15,6 +15,12 @@ public class APIAnswer {
 		hasError=false;
 		networkError=false;
 		if (j!="") set(j);
+	}
+	public String rawResult () {
+		return RAWanswer;
+	}
+	public boolean isReady () {
+		return ready;
 	}
 	/**
 	 * method parse raw JSON string to APIAnswer object
@@ -70,13 +76,12 @@ public class APIAnswer {
 	
 	public String[] getArray(String v) {
 		List<String> vals = new ArrayList<String>();
-		String tmp = "";
 		
-		int i=0;
+		//int i=0;
 		JsonArray results = JSONanswer.getAsJsonArray("d");
 		for (JsonElement result : results) {
 			vals.add(result.getAsJsonObject().get(v).getAsString());
-			i++;
+			//i++;
 		}
 		String[] tmp2 = new String[ vals.size() ];
 		vals.toArray( tmp2 );
